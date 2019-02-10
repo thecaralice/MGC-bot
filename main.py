@@ -15,7 +15,7 @@ class Sender:
         
     def write(self, s): 
         self.loop.run_until_complete(asyncio.wait([self.loop.create_task(self.ctx.send(s))]))
-        sys.stdout.write(s)
+        sys.stdout.write(s)  
         return len(s)
 
 bot = commands.Bot(command_prefix='$', description='Бот для MGC', command_not_found='Команды {} не существует', command_has_no_subcommands='У команды {} нет подкоманд', owner_id=426757590022881290)
