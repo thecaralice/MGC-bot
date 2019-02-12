@@ -82,4 +82,8 @@ async def eval_(ctx, code: str):
         ctx.send('Код выполнен!')
     print = print_
 
+@bot.event
+async def on_error(event, *args, **kwargs):
+    await bot.send_message(discord.Object('426757590022881290'))
+
 bot.run(TOKEN)
