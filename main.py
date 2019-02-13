@@ -71,25 +71,6 @@ async def info(ctx):
 async def kill(ctx):
     await bot.logout()
 
-<<<<<<< HEAD
-#@bot.command(name='eval')
-#@commands.is_owner()
-#async def eval_(ctx, code: str):
-    #global print
-    #print_ = print
-    #def print(*a, **kwa):
-        #if 'file' not in kwa:
-            #kwa['file'] = Sender(ctx)
-            #print_(*a, **kwa)
-    #try:
-        #await ctx.send(eval(code))
-
-
-    #except SyntaxError:
-        #exec(code)
-        #ctx.send('Код выполнен!')
-    #print = print_
-=======
 @bot.command(name='eval')
 @commands.check(is_dev)
 async def eval_(ctx, code: str):
@@ -105,7 +86,6 @@ async def eval_(ctx, code: str):
         exec(code)
         ctx.send('Код выполнен!')
     print = print_
->>>>>>> korochun-patch-1-2
 
 #@bot.event
 #async def on_command_error(event, *args, **kwargs):
