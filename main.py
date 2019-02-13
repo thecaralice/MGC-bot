@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from traceback import format_exc
 
 import discord
 from discord.ext import commands
@@ -12,16 +13,22 @@ class Sender:
     def __init__(self, ctx):
         self.ctx = ctx
         self.loop = bot.loop
-        
-    def write(self, s): 
+
+    def write(self, s):
         self.loop.run_until_complete(asyncio.wait([self.loop.create_task(self.ctx.send(s))]))
-        sys.stdout.write(s)  
+        sys.stdout.write(s)
         return len(s)
 
 bot = commands.Bot(command_prefix='$', description='Бот для MGC', command_not_found='Команды {} не существует', command_has_no_subcommands='У команды {} нет подкоманд', owner_id=426757590022881290)
 
 cr_client = clashroyale.official_api.Client(CR_TOKEN, is_async=True)
 bs_client = brawlstats.Client(BRAWL_STARS_TOKEN, is_async=True)
+
+devs = [426757590022881290,
+          308628182213459989]
+
+async def is_dev(ctx):
+    return ctx.author.id in devs
 
 @bot.group()
 async def clashroyale(ctx):
@@ -47,23 +54,24 @@ async def get_club(ctx: commands.Context, tag: str):
         embed.add_field(name='Трофеи', value=club.trophies)
         embed.add_field(name='Трофеев для вступления', value=club.required_trophies)
         embed.add_field(name='ID значка, что бы это ни значило', value=club.badge_id)
-    
+
         await ctx.send(embed=embed)
 
 @clashroyale.command()
-async def cards():
+async def cards(ctx):
     c = await cr_client.get_all_cards()
-    await bot.say(c)
+    await ctx.send(c)
 
 @bot.command()
 async def info(ctx):
     await ctx.send(await bot.application_info())
 
 @bot.command()
-@commands.is_owner()
+@commands.check(is_dev)
 async def kill(ctx):
     await bot.logout()
 
+<<<<<<< HEAD
 #@bot.command(name='eval')
 #@commands.is_owner()
 #async def eval_(ctx, code: str):
@@ -75,15 +83,32 @@ async def kill(ctx):
             #print_(*a, **kwa)
     #try:
         #await ctx.send(eval(code))
-        
-        
+
+
     #except SyntaxError:
         #exec(code)
         #ctx.send('Код выполнен!')
     #print = print_
+=======
+@bot.command(name='eval')
+@commands.check(is_dev)
+async def eval_(ctx, code: str):
+    global print
+    print_ = print
+    def print(*a, **kwa):
+        if 'file' not in kwa:
+            kwa['file'] = Sender(ctx)
+            print_(*a, **kwa)
+    try:
+        await ctx.send(eval(code))
+    except SyntaxError:
+        exec(code)
+        ctx.send('Код выполнен!')
+    print = print_
+>>>>>>> korochun-patch-1-2
 
-@bot.event
-async def on_error(event, *args, **kwargs):
-    await bot.send_message(discord.Object('426757590022881290'))
+#@bot.event
+#async def on_command_error(event, *args, **kwargs):
+    #await bot.get_user(426757590022881290).send(''.join(format_exc()))
 
 bot.run(TOKEN)
