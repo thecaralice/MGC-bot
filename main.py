@@ -23,6 +23,14 @@ bot = commands.Bot(command_prefix='$', description='Бот для MGC', command_
 cr_client = clashroyale.official_api.Client(CR_TOKEN, is_async=True)
 bw_client = brawlstats.Client(BRAWL_STARS_TOKEN, is_async=True)
 
+owners = [426757590022881290, 308628182213459989]
+
+def isowner(author):
+    if ctx.author.id in owners:
+        return True
+    ctx.send('У вас недостаточно лев для использования этой команды.')
+    return False
+
 @bot.group()
 async def clashroyale(ctx):
     pass
@@ -60,21 +68,21 @@ async def info(ctx):
     await ctx.send(await bot.application_info())
 
 @bot.command()
-@commands.is_owner()
 async def kill(ctx):
-    await bot.logout()
+    if isowner(ctx.author):
+        await bot.logout()
 
 @bot.command(name='eval')
-@commands.is_owner()
 async def eval_(ctx, code: str):
-    global print
-    print_ = print
-    def print(*a, **kwa):
-        if 'file' not in kwa:
-            kwa['file'] = Sender(ctx)
-            print_(*a, **kwa)
-    try:
-        await ctx.send(eval(code))
+    if isowner(ctx.author):
+        global print
+        print_ = print
+        def print(*a, **kwa):
+            if 'file' not in kwa:
+                kwa['file'] = Sender(ctx)
+                print_(*a, **kwa)
+        try:
+            await ctx.send(eval(code))
         
         
     except SyntaxError:
