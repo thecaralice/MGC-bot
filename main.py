@@ -21,7 +21,7 @@ class Sender:
 bot = commands.Bot(command_prefix='$', description='Бот для MGC', command_not_found='Команды {} не существует', command_has_no_subcommands='У команды {} нет подкоманд', owner_id=426757590022881290)
 
 cr_client = clashroyale.official_api.Client(CR_TOKEN, is_async=True)
-bw_client = brawlstats.Client(BRAWL_STARS_TOKEN, is_async=True)
+bs_client = brawlstats.Client(BRAWL_STARS_TOKEN, is_async=True)
 
 @bot.group()
 async def clashroyale(ctx):
@@ -34,7 +34,7 @@ async def brawlstars(ctx):
 @brawlstars.command(name='get-club')
 async def get_club(ctx: commands.Context, tag: str):
     try:
-        club = await bw_client.get_club(tag)
+        club = await bs_client.get_club(tag)
     except brawlstats.errors.NotFoundError:
         await ctx.send('Такого клана не существует!')
     else:
@@ -50,10 +50,10 @@ async def get_club(ctx: commands.Context, tag: str):
     
         await ctx.send(embed=embed)
 
-#@clashroyale.command()
-#async def cards():
-    #c = cr_client.get_all_cards()
-    #await bot.say(c)
+@clashroyale.command()
+async def cards():
+    c = await cr_client.get_all_cards()
+    await bot.say(c)
 
 @bot.command()
 async def info(ctx):
@@ -64,23 +64,23 @@ async def info(ctx):
 async def kill(ctx):
     await bot.logout()
 
-@bot.command(name='eval')
-@commands.is_owner()
-async def eval_(ctx, code: str):
-    global print
-    print_ = print
-    def print(*a, **kwa):
-        if 'file' not in kwa:
-            kwa['file'] = Sender(ctx)
-            print_(*a, **kwa)
-    try:
-        await ctx.send(eval(code))
+#@bot.command(name='eval')
+#@commands.is_owner()
+#async def eval_(ctx, code: str):
+    #global print
+    #print_ = print
+    #def print(*a, **kwa):
+        #if 'file' not in kwa:
+            #kwa['file'] = Sender(ctx)
+            #print_(*a, **kwa)
+    #try:
+        #await ctx.send(eval(code))
         
         
-    except SyntaxError:
-        exec(code)
-        ctx.send('Код выполнен!')
-    print = print_
+    #except SyntaxError:
+        #exec(code)
+        #ctx.send('Код выполнен!')
+    #print = print_
 
 @bot.event
 async def on_error(event, *args, **kwargs):
