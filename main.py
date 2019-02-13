@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from traceback import format_exc
 
 import discord
 from discord.ext import commands
@@ -23,13 +24,11 @@ bot = commands.Bot(command_prefix='$', description='Бот для MGC', command_
 cr_client = clashroyale.official_api.Client(CR_TOKEN, is_async=True)
 bw_client = brawlstats.Client(BRAWL_STARS_TOKEN, is_async=True)
 
-owners = [426757590022881290, 308628182213459989]
+devs = [426757590022881290, 
+          308628182213459989]
 
-def isowner(author):
-    if ctx.author.id in owners:
-        return True
-    ctx.send('У вас недостаточно лев для использования этой команды.')
-    return False
+async def is_dev(ctx):
+    return ctx.author.id in devs
 
 @bot.group()
 async def clashroyale(ctx):
@@ -58,40 +57,38 @@ async def get_club(ctx: commands.Context, tag: str):
     
         await ctx.send(embed=embed)
 
-#@clashroyale.command()
-#async def cards():
-    #c = cr_client.get_all_cards()
-    #await bot.say(c)
+@clashroyale.command()
+async def cards():
+    c = cr_client.get_all_cards()
+    await bot.say(c)
 
 @bot.command()
 async def info(ctx):
     await ctx.send(await bot.application_info())
 
 @bot.command()
+@commands.check(is_dev)
 async def kill(ctx):
-    if isowner(ctx.author):
-        await bot.logout()
+    await bot.logout()
 
 @bot.command(name='eval')
+@commands.check(is_dev)
 async def eval_(ctx, code: str):
-    if isowner(ctx.author):
-        global print
-        print_ = print
-        def print(*a, **kwa):
-            if 'file' not in kwa:
-                kwa['file'] = Sender(ctx)
-                print_(*a, **kwa)
-        try:
-            await ctx.send(eval(code))
-        
-        
+    global print
+    print_ = print
+    def print(*a, **kwa):
+        if 'file' not in kwa:
+            kwa['file'] = Sender(ctx)
+            print_(*a, **kwa)
+    try:
+        await ctx.send(eval(code))        
     except SyntaxError:
         exec(code)
         ctx.send('Код выполнен!')
     print = print_
 
-@bot.event
-async def on_error(event, *args, **kwargs):
-    await bot.send_message(discord.Object('426757590022881290'))
+#@bot.event
+#async def on_command_error(event, *args, **kwargs):
+    #await bot.get_user(426757590022881290).send(''.join(format_exc()))
 
 bot.run(TOKEN)
