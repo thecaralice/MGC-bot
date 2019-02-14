@@ -84,7 +84,7 @@ async def eval_(ctx, code: str):
         await ctx.send(eval(code))
     except SyntaxError:
         exec(code)
-        ctx.send('Код выполнен!')
+        await ctx.send('Код выполнен!')
     print = print_
 
 #@bot.event
