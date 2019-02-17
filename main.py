@@ -57,9 +57,10 @@ async def get_club(ctx: commands.Context, tag: str):
 
         await ctx.send(embed=embed)
 
-@clashroyale.command()
+@clashroyale.command(enabled=False)
 async def cards(ctx):
     c = await cr_client.get_all_cards()
+    print(c)
     await ctx.send(c)
 
 @bot.command()
