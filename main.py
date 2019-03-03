@@ -1,5 +1,6 @@
 import asyncio
 import sys
+import os
 from traceback import format_exc
 
 import discord
@@ -53,7 +54,6 @@ async def get_club(ctx: commands.Context, tag: str):
         embed.add_field(name='Участников онлайн', value=club.online_members)
         embed.add_field(name='Трофеи', value=club.trophies)
         embed.add_field(name='Трофеев для вступления', value=club.required_trophies)
-        embed.add_field(name='ID значка, что бы это ни значило', value=club.badge_id)
 
         await ctx.send(embed=embed)
 
@@ -91,5 +91,6 @@ async def eval_(ctx, code: str):
 #@bot.event
 #async def on_command_error(event, *args, **kwargs):
     #await bot.get_user(426757590022881290).send(''.join(format_exc()))
-
+for i in INITIAL_EXTENSIONS:
+    bot.load_extension(i)
 bot.run(TOKEN)
