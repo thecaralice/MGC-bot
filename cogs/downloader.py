@@ -62,7 +62,7 @@ class Downloader(commands.Cog):
     async def uninstall(self, ctx: commands.Context, cog: str):
         if not cog.endswith('.py'): cog += '.py'
         try:
-            os.remove(cog)
+            os.remove('cogs/' + cog)
         except FileNotFoundError:
             await ctx.send('This cog is not installed')
         else:
