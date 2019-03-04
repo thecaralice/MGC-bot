@@ -2,7 +2,6 @@ import os
 import asyncio
 import aiohttp
 
-import lxml
 import discord
 from discord.ext import commands
 
