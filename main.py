@@ -88,9 +88,9 @@ async def eval_(ctx, code: str):
         await ctx.send('Код выполнен!')
     print = print_
 
-#@bot.event
-#async def on_command_error(event, *args, **kwargs):
-    #await bot.get_user(426757590022881290).send(''.join(format_exc()))
+@bot.event
+async def on_command_error(event, *args, **kwargs):
+    await bot.get_user(426757590022881290).send(''.join(format_exc()))
 for i in INITIAL_EXTENSIONS:
     bot.load_extension(i)
 bot.run(TOKEN)
