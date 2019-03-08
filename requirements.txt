@@ -1,9 +1,5 @@
 aiohttp==3.4.4
-<<<<<<< HEAD
 brawlstats==2.3.0
-=======
-brawlstats==2.2.2
->>>>>>> 8dbcecf496f7059f2cdf9cc55ee67d5bcd93aea7
 clashroyale==4.0.1
 discord-webhook==0.4.1
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice]
