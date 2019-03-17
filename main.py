@@ -8,6 +8,7 @@ from discord.ext import commands
 import clashroyale
 import brawlstats
 
+import keep_alive
 from const import *
 
 class Sender:
@@ -95,4 +96,5 @@ async def on_command_error(event, *args, **kwargs):
 for i in INITIAL_EXTENSIONS:
     bot.load_extension(i)
 
+keep_alive.keep_alive()
 bot.run(TOKEN)
