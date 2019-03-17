@@ -9,20 +9,21 @@ class Rainbow(commands.Cog):
         self.bot = bot
         self.roles = set()
         self.on_low_role = 'Sorry, your role isn\'t high enough'
-        self.speed = 7
+        self.step = 7
+        self.delay = 0.1
         self.hue = 0
         self.bot.loop.create_task(self.loop())
-    
+     
     async def loop(self):
-        print('Task created!')
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             for i in self.roles:
                 print(i.name, i.colour)
-                self.hue = (self.hue + self.speed) % 360
+                self.hue = (self.hue + self.step) % 360
                 rgb = [int(x * 255) for x in hls_to_rgb(self.hue / 360, 0.5, 1)]
                 clr = discord.Colour(((rgb[0] << 16) + (rgb[1] << 8) + rgb[2]))
                 await i.edit(colour=clr, reason='Automatic rainbow color change')
+            await asyncio.sleep(self.delay)
     
     @commands.command()
     @commands.has_permissions(manage_roles=True)

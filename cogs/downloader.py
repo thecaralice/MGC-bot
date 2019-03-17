@@ -73,7 +73,7 @@ class Downloader(commands.Cog):
         for path, dname, fname in os.walk('cogs'):
             if path.endswith('__pycache__'): continue
             for i in fname:
-                await ctx.send(path + '\\' + i[:-3])
+                await ctx.send(path + '\\' + i[:-3] + '|' + dname)
     
 def setup(bot: commands.Bot):
     bot.add_cog(Downloader(bot))
