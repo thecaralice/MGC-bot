@@ -26,7 +26,7 @@ class Downloader(commands.Cog):
     async def install(self, ctx, link: str, overwrite: bool = False):
         filename = link.split('/')[-1]
         async with aiohttp.ClientSession() as session:
-            text = await session.get(link.replace('blob/', '', 1).replace('github.com', 'raw.github.com'))
+            text = await (await session.get(link.replace('blob/', '', 1).replace('github.com', 'raw.github.com'))).text()
         os.chdir('cogs')
         while (os.path.exists(filename) and not overwrite) or (set(filename) & set('\\/:*?"<>|')):
             await ctx.send('File with this filename already exists, type a new filename' if (os.path.exists(filename) and not overwrite) else 'A filename cannot contain any of the following characters: `\` `/` `:` `*` `?` `"` `<` `>` `|`')
