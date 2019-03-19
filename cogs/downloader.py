@@ -15,7 +15,7 @@ class Downloader(commands.Cog):
         pass
 
     @cogs.group()
-    async def git(self, ctx):
+    async def git(self):
         pass
 
     @cogs.group()
@@ -69,7 +69,7 @@ class Downloader(commands.Cog):
             await ctx.send('Successfully uninstalled ' + cog[:-3])
 
     @cogs.command()
-    async def list(self, ctx):
+    async def list(self):
         for path, dname, fname in os.walk('cogs'):
             if path.endswith('__pycache__'): continue
             for i in fname:

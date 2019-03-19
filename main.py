@@ -1,7 +1,7 @@
 import asyncio
 import sys
 import os
-from traceback import format_exception
+from traceback import format_exc
 
 import discord
 from discord.ext import commands
@@ -82,11 +82,9 @@ async def kill(ctx):
     await bot.logout()
 
 
-#@bot.event
-#async def on_command_error(event, *args, **kwargs):
- #   await bot.get_user(426757590022881290).send(''.join(
- #       format_exception(*sys.exc_info())))
-
+@bot.event
+async def on_command_error(ctx, error: commands.CommandError):
+    await bot.get_user(426757590022881290).send(''.join(format_exc()))
 
 for i in INITIAL_EXTENSIONS:
     bot.load_extension(i)
