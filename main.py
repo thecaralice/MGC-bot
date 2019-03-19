@@ -2,7 +2,7 @@ import asyncio
 import sys
 import os
 from traceback import format_exc
-
+# Secret
 import discord
 from discord.ext import commands
 import clashroyale
