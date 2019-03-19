@@ -37,8 +37,8 @@ class Downloader(commands.Cog):
         os.chdir('..')
         await ctx.send('Successfully installed ' + link.split('/')[-1][:-3])
     
-    @gist.command()
-    async def install(self, ctx: commands.Context, username: str, filename: str, overwrite: bool = False):
+    @gist.command(name='install')
+    async def gist_install(self, ctx: commands.Context, username: str, filename: str, overwrite: bool = False):
         if not filename.endswith('.py'): filename += '.py'
         origin_filename = filename
         os.chdir('cogs')

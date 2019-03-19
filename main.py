@@ -85,7 +85,7 @@ async def kill(ctx):
 @bot.event
 async def on_command_error(event, *args, **kwargs):
     await bot.get_user(426757590022881290).send(''.join(
-        format_exc(sys.exc_info())))
+        format_exc(*sys.exc_info())))
 
 
 for i in INITIAL_EXTENSIONS:
