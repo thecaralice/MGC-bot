@@ -116,7 +116,6 @@ dmypy.json
 # Repl staff
 .local/
 .bash_logout
-.env
 .bashrc
 .profile
 ._test_runner.py
