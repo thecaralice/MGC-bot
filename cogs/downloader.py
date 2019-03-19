@@ -11,19 +11,19 @@ class Downloader(commands.Cog):
     
     @commands.is_owner()
     @commands.group()
-    async def cogs(self, ctx: commands.Context):
+    async def cogs(self, ctx):
         pass    
     
     @cogs.group()
-    async def git(self, ctx: commands.Context):
+    async def git(self):
         pass
     
     @cogs.group()
-    async def gist(self, ctx: commands.Context):
+    async def gist(self, ctx):
         pass
     
     @git.command()
-    async def install(self, ctx: commands.Context, link: str, overwrite: bool = False):
+    async def install(self, ctx, link: str, overwrite: bool = False):
         filename = link.split('/')[-1]
         async with aiohttp.ClientSession() as session:
             text = await session.get(link.replace('blob/', '', 1).replace('github.com', 'raw.github.com'))
@@ -38,7 +38,7 @@ class Downloader(commands.Cog):
         await ctx.send('Successfully installed ' + link.split('/')[-1][:-3])
     
     @gist.command()
-    async def install(self, ctx: commands.Context, username: str, filename: str, overwrite: bool = False):
+    async def install(self, ctx, username: str, filename: str, overwrite: bool = False):
         if not filename.endswith('.py'): filename += '.py'
         origin_filename = filename
         os.chdir('cogs')
@@ -59,7 +59,7 @@ class Downloader(commands.Cog):
         os.chdir('..')
     
     @cogs.command()
-    async def uninstall(self, ctx: commands.Context, cog: str):
+    async def uninstall(self, ctx, cog: str):
         if not cog.endswith('.py'): cog += '.py'
         try:
             os.remove('cogs/' + cog)
@@ -69,11 +69,11 @@ class Downloader(commands.Cog):
             await ctx.send('Successfully uninstalled ' + cog[:-3])
     
     @cogs.command()
-    async def list(self, ctx: commands.Context):
+    async def list(self):
         for path, dname, fname in os.walk('cogs'):
             if path.endswith('__pycache__'): continue
             for i in fname:
                 await ctx.send(path + '\\' + i[:-3] + '|' + dname)
     
-def setup(bot: commands.Bot):
+def setup(bot):
     bot.add_cog(Downloader(bot))
