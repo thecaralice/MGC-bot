@@ -8,20 +8,20 @@ from discord.ext import commands
 class Downloader(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-    
+
     @commands.is_owner()
     @commands.group()
     async def cogs(self, ctx):
-        pass    
-    
+        pass
+
     @cogs.group()
     async def git(self):
         pass
-    
+
     @cogs.group()
     async def gist(self, ctx):
         pass
-    
+
     @git.command()
     async def install(self, ctx, link: str, overwrite: bool = False):
         filename = link.split('/')[-1]
@@ -36,9 +36,9 @@ class Downloader(commands.Cog):
             f.write(text)
         os.chdir('..')
         await ctx.send('Successfully installed ' + link.split('/')[-1][:-3])
-    
-    @gist.command()
-    async def install(self, ctx, username: str, filename: str, overwrite: bool = False):
+
+    @gist.command(name='install')
+    async def gist_install(self, ctx: commands.Context, username: str, filename: str, overwrite: bool = False):
         if not filename.endswith('.py'): filename += '.py'
         origin_filename = filename
         os.chdir('cogs')
@@ -57,7 +57,7 @@ class Downloader(commands.Cog):
             os.rename(origin_filename, filename)
             os.rename(origin_filename + '.tmp', origin_filename)
         os.chdir('..')
-    
+
     @cogs.command()
     async def uninstall(self, ctx, cog: str):
         if not cog.endswith('.py'): cog += '.py'
@@ -67,13 +67,13 @@ class Downloader(commands.Cog):
             await ctx.send('This cog is not installed')
         else:
             await ctx.send('Successfully uninstalled ' + cog[:-3])
-    
+
     @cogs.command()
     async def list(self):
         for path, dname, fname in os.walk('cogs'):
             if path.endswith('__pycache__'): continue
             for i in fname:
                 await ctx.send(path + '\\' + i[:-3] + '|' + dname)
-    
+
 def setup(bot):
     bot.add_cog(Downloader(bot))
