@@ -11,18 +11,6 @@ import brawlstats
 import keep_alive
 
 
-class Sender:
-    def __init__(self, ctx):
-        self.ctx = ctx
-        self.loop = bot.loop
-
-    def write(self, s):
-        self.loop.run_until_complete(
-            asyncio.wait([self.loop.create_task(self.ctx.send(s))]))
-        sys.stdout.write(s)
-        return len(s)
-
-
 bot = commands.Bot(
     command_prefix='$',
     description='Бот для MGC',
@@ -38,11 +26,8 @@ devs = [426757590022881290, 308628182213459989]
 
 INITIAL_EXTENSIONS = ['cogs.rainbow', 'cogs.downloader']
 
-cr_client = clashroyale.official_api.Client(os.environ['CR_TOKEN'], is_async=True)
-bs_client = brawlstats.Client(os.environ['BRAWL_STARS_TOKEN'], is_async=True)
-
-
 TOKEN = os.environ['BOT_TOKEN']
+
 
 async def is_dev(ctx):
     return ctx.author.id in devs
@@ -95,25 +80,6 @@ async def info(ctx):
 @commands.check(is_dev)
 async def kill(ctx):
     await bot.logout()
-
-
-@bot.command(name='eval')
-@commands.check(is_dev)
-async def eval_(ctx, code: str):
-    global print
-    print_ = print
-
-    def print(*a, **kwa):
-        if 'file' not in kwa:
-            kwa['file'] = Sender(ctx)
-            print_(*a, **kwa)
-
-    try:
-        await ctx.send(eval(code))
-    except SyntaxError:
-        exec(code)
-        await ctx.send('Код выполнен!')
-    print = print_
 
 
 @bot.event
