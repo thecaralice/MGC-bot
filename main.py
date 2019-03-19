@@ -23,6 +23,7 @@ class Sender:
         return len(s)
 
 
+<<<<<<< HEAD
 bot = commands.Bot(
     command_prefix='$',
     description='Бот для MGC',
@@ -39,7 +40,13 @@ devs = [426757590022881290, 308628182213459989]
 INITIAL_EXTENSIONS = ['cogs.rainbow', 'cogs.downloader']
 
 TOKEN = os.environ['BOT_TOKEN']
+=======
+cr_client = clashroyale.official_api.Client(os.environ['CR_TOKEN'], is_async=True)
+bs_client = brawlstats.Client(os.environ['BRAWL_STARS_TOKEN'], is_async=True)
+>>>>>>> 045210b9cd5695bdc56e43aacec2fa3e6ef591eb
 
+
+TOKEN = os.environ['BOT_TOKEN']
 
 async def is_dev(ctx):
     return ctx.author.id in devs
