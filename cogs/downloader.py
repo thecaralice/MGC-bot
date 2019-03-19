@@ -23,8 +23,7 @@ class Downloader(commands.Cog):
         pass
 
     @git.command()
-    async def install(self, ctx, link: str, overwrite: bool = False):
-        filename = link.split('/')[-1]
+    async def install(self, ctx, link: str, filename: str, overwrite: bool = False):
         async with aiohttp.ClientSession() as session:
             text = await (await session.get(link.replace('blob/', '', 1).replace('github.com', 'raw.github.com'))).text()
         os.chdir('cogs')
