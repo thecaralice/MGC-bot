@@ -7,10 +7,12 @@ import discord
 from discord.ext import commands
 import clashroyale
 import brawlstats
+import dotenv
 
+from logger import * 
 import keep_alive
 
-
+dotenv.load_dotenv(r'.\.env')
 bot = commands.Bot(
     command_prefix='$',
     description='Бот для MGC',
@@ -81,10 +83,6 @@ async def info(ctx):
 async def kill(ctx):
     await bot.logout()
 
-
-@bot.event
-async def on_command_error(ctx, e):
-    await bot.get_user(426757590022881290).send(''.join([e.__class__.__name__, str(e), *sys.exc_info()]))
 
 
 for i in INITIAL_EXTENSIONS:
