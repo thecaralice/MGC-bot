@@ -69,10 +69,10 @@ class Downloader(commands.Cog):
 
     @cogs.command()
     async def list(self, ctx):
-        for path, dname, fname in os.walk('cogs'):
-            if path.endswith('__pycache__'): continue
-            for i in fname:
-                await ctx.send(path + '\\' + i[:-3] + '|' + dname)
+        for root, dirs, files in os.walk('cogs'):
+            if root.endswith('__pycache__'): continue
+            for i in files:
+                await ctx.send(root.replace('\\',  '.') + '.' + i[:-3])
 
 def setup(bot):
     bot.add_cog(Downloader(bot))
