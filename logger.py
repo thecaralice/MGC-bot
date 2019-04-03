@@ -1,16 +1,17 @@
 import logging
 import logging.handlers as handlers
+import requests
 import traceback
-import  datetime
+from datetime import datetime as dt
 
-from discord_webhook import DiscordEmbed, DiscordWebhook
+a =  None
 
 colors =  {
-    'DEBUG': 0x0,
-    'INFO': 0x0,
-    'WARNING': 0x0,
-    'ERROR': 0x0,
-    'CRITICAL': 0x0
+    'DEBUG': 0x00ff00,
+    'INFO': 0xffff00,
+    'WARNING': 0xff7700,
+    'ERROR': 0xff0000,
+    'CRITICAL': 0x770000
 }
 
 class DiscordHandler(logging.Handler):
@@ -20,31 +21,52 @@ class DiscordHandler(logging.Handler):
         self.level = level
     
     def emit(self, record: logging.LogRecord):
-        global a,  e
-        a = record
-        webhook = DiscordWebhook(self.url, username='Logger', avatar_url='https://cdn.discordapp.com/avatars/543148124768829451/44d1ec20a0fa7f35ca4b7aec4b8b4af7.png')
-        embed = DiscordEmbed(title=record.levelname.capitalize(),
-                             description=record.msg,
-                             color=colors[record.levelname])
-        embed.set_author(name=record.name)
-        embed.add_embed_field(name='Module', value=record.module)
-        embed.add_embed_field(name='File', value=record.pathname)
-        embed.add_embed_field(name='Function', value=record.funcName)
-        embed.add_embed_field(name='Process', value=record.processName)
-        embed.add_embed_field(name='Thread', value=record.threadName)
+        print(record.args)
+        em = {'embeds':
+              [
+                  {'title': record.levelname.capitalize(),
+                   'description': record.msg % record.args,
+                   'color': colors[record.levelname],
+                   'timestamp': dt.fromtimestamp(record.created).isoformat(),
+                   'author': {
+                       'name': record.name,
+                   },
+                   'fields': [
+                       {
+                           'name': 'File',
+                           'value': record.pathname
+                        },
+                       {
+                           'name': 'Function',
+                           'value': record.funcName,
+                       }
+                   ]
+                   }
+              ]
+              } 
         if record.levelname == 'ERROR':
-            embed.add_embed_field(name='Exception', value = f'```py\n{"".join(traceback.format_exception(*record.exc_info))}```')
-            webhook.add_file(record.pathname, record.filename)
-        webhook.add_embed(embed)
-        webhook.execute()
-        
+            em['embeds'][0]['description'] = f'```py\n{"".join(traceback.format_exception(*record.exc_info))}```'
+            em['embeds'][0]['fields'].append(
+                {
+                    'name': 'Message',
+                    'value': record.msg
+                }
+            )           
+        requests.post(url=self.url, json=em)            
 
-handler = DiscordHandler('https://canary.discordapp.com/api/webhooks/557957697597603840/Fm2r0kAVZ5cdNmpEAinX_XdtfKnoBc4f0MXrnEancMvWhCL38L67kSxViDVGyxjEv3b-')
+logging.basicConfig(format="%(levelname)s -- %(name)s.%(funcName)s : %(message)s", level=logging.INFO)
+
+dhandler = DiscordHandler('https://discordapp.com/api/webhooks/558371669865922571/Jc5HdfqbnNHCtRjvP9weEy0rrrzCyDSvjdgRXhjnAhlDP8jjoBgXJgAKBFMyobZxvA63')
+fhandler = logging.FileHandler('logs.log')
+_fhandler = logging.FileHandler('logs.log')
+_fhandler.setLevel(logging.DEBUG)
 
 _liblogger = logging.getLogger('discord')
 _liblogger.setLevel(level=logging.WARNING)
-_liblogger.addHandler(handler)
+_liblogger.addHandler(dhandler)
+_liblogger.addHandler(fhandler)
 
 logger = logging.getLogger('MGC-bot')
 logger.setLevel(level=logging.DEBUG)
-logger.addHandler(handler)
+logger.addHandler(dhandler)
+logger.addHandler(fhandler)
