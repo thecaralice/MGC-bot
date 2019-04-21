@@ -21,7 +21,7 @@ class DiscordHandler(logging.Handler):
         self.level = level
     
     def emit(self, record: logging.LogRecord):
-        print(record.args)
+        print(record.msg, record.args, record.msg % record.args)
         em = {'embeds':
               [
                   {'title': record.levelname.capitalize(),

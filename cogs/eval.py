@@ -7,10 +7,11 @@ from contextlib import redirect_stdout
 import aiohttp
 from discord.ext import commands
 
-class Eval:
+class Eval(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+        
+    @commands.is_owner()
     @commands.command(name='eval')
     async def _eval(self, ctx, *, body):
         """Evaluates python code"""
@@ -31,7 +32,7 @@ class Eval:
                 return '\n'.join(content.split('\n')[1:-1])
 
             # remove `foo`
-            return content.strip('` \n')
+            return content.strip('` \n') + '\n'
 
         env.update(globals())
 

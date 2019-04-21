@@ -25,7 +25,11 @@ class Rainbow(commands.Cog):
                 await i.edit(colour=clr, reason='Automatic rainbow color change')
             await asyncio.sleep(self.delay)
     
-    @commands.command()
+    @commands.group()
+    async def rainbow():
+        pass
+    
+    @rainbow.command()
     @commands.has_permissions(manage_roles=True)
     async def start(self, ctx: commands.Context, role: discord.Role):
         if ctx.author.top_role > role:
@@ -35,7 +39,7 @@ class Rainbow(commands.Cog):
         else:
             await ctx.send(self.on_low_role)
     
-    @commands.command()
+    @rainbow.command()
     @commands.has_permissions(manage_roles=True)
     async def stop(self, ctx: commands.Context, role: discord.Role):
         if ctx.author.top_role > role:
